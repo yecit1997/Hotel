@@ -24,6 +24,8 @@ class Usuario(AbstractUser):
     dni = models.IntegerField(editable=False, unique=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios_con_rol')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_modificacion = models.DateTimeField(auto_now=True)
     
     class Meta:
         verbose_name = 'Usuario'
