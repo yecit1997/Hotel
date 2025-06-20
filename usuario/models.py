@@ -21,7 +21,7 @@ class Rol(models.Model):
 
 class Usuario(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    dni = models.IntegerField(editable=False, unique=True)
+    dni = models.IntegerField(unique=True, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, null=True, blank=True, related_name='usuarios_con_rol')
     fecha_creacion = models.DateTimeField(auto_now_add=True)

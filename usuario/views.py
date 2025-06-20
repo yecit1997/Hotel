@@ -9,6 +9,21 @@ from .serializers import RolSerializer, UsuarioSerializer
 from .models import Usuario, Rol
 
 
+
+class Roles(APIView):
+    
+    def get(self, request):
+        roles = Rol.objects.all()
+        if not roles:
+            return Response({'Error': 'No se encontraron roles'}, status=status.HTTP_204_NO_CONTENT)
+        serializer = RolSerializer(roles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
+
 class Usuarios(APIView):
     
     def get(self, request):

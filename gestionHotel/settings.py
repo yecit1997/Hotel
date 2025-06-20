@@ -137,6 +137,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+AUTH_USER_MODEL = "usuario.Usuario" # Modelo con el cual los usuarios se van a autenticar
+
+
 # Configuracion para la conexion del Frontend
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
