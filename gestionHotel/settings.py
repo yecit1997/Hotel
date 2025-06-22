@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,13 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x%+zqyt&uq)n_(*f_6mpr#ixhz(+p*2yjf&7f!um6r@p91d-b%'
-# SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -87,12 +87,36 @@ WSGI_APPLICATION = 'gestionHotel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', # ¡Muy importante! Indica el motor MySQL
+#         'NAME': 'api_django',    # Nombre de la base de datos que creaste
+#         'USER': 'root',                       # Usuario de MySQL (ej. 'root' o 'django_user')
+#         'PASSWORD': '',      # Contraseña de tu usuario MySQL
+#         'HOST': '127.0.0.1',                  # O 'localhost' si es local
+#         'PORT': '3306',                       # Puerto de MySQL (por defecto es 3306)
+#         # Opcional: Configuraciones adicionales para MySQL
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", # Ya lo tenías, mantenlo
+#             'charset': 'utf8mb4',
+#             # Agrega esta línea si no funciona lo anterior, pero ten cuidado con el rendimiento
+#             # 'read_default_file': '/etc/mysql/my.cnf', # O la ruta a tu archivo my.cnf/my.ini para leer opciones
+#             # A veces ayuda añadir estas opciones para versiones antiguas
+#             'sql_mode': 'STRICT_TRANS_TABLES', # Asegura que el modo SQL sea compatible
+#             'isolation_level': 'read committed', # Puede ayudar con algunas versiones de MariaDB
+#         },
+#     }
+# }
+
 
 
 # Password validation
@@ -137,10 +161,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = "usuario.Usuario" # Modelo con el cual los usuarios se van a autenticar
+AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL') # Modelo con el cual los usuarios se van a autenticar
 
 
 # Configuracion para la conexion del Frontend
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    os.getenv('URL_CLIENT'),
 ]
