@@ -25,7 +25,7 @@ while True:
     if bateria is not None:
         print('Porcentaje de bateria: ', bateria.percent)
         print('conectado a la corriente: ', bateria.power_plugged)
-        print('Tiempo restante de bateria: ', bateria.secsleft)
+        print('Tiempo restante de bateria: ', convertir_tiempo(bateria.secsleft))
         
 
 

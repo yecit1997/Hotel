@@ -1,15 +1,15 @@
-# from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 
 from .serializers import RolSerializer, UsuarioSerializer
 from .models import Usuario, Rol
 
 
-
+'''
+Vistas basadas en clases para Usuario
+'''
 class Roles(APIView):
     
     def get(self, request):
@@ -72,8 +72,9 @@ class RolDetail(APIView):
        return Response({'OK': 'Rol eliminado correctamente'}, status=status.HTTP_200_OK)
        
 
-
-
+'''
+Vistas basadas en clases para Usuario
+'''
 class Usuarios(APIView):
     
     def get(self, request):
@@ -96,7 +97,6 @@ class Usuarios(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class UsuariosDetail(APIView):
