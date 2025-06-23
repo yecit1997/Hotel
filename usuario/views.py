@@ -10,7 +10,7 @@ from .models import Usuario, Rol
 '''
 Vistas basadas en clases para Usuario
 '''
-class Roles(APIView):
+class RolesView(APIView):
     
     def get(self, request):
         '''
@@ -34,7 +34,7 @@ class Roles(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RolDetail(APIView):
+class RolViewDetail(APIView):
     
     def get_rol(self, pk):
         try:
@@ -75,7 +75,7 @@ class RolDetail(APIView):
 '''
 Vistas basadas en clases para Usuario
 '''
-class Usuarios(APIView):
+class UsuariosView(APIView):
     
     def get(self, request):
         '''
@@ -99,7 +99,7 @@ class Usuarios(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UsuariosDetail(APIView):
+class UsuariosViewDetail(APIView):
     
     def get_usuario(self, pk):
         '''

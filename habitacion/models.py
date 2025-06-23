@@ -64,9 +64,25 @@ class Habitacion(models.Model):
     cama = models.ForeignKey(Cama, on_delete=models.SET_NULL, null=True, blank=True, related_name='cama_habitacion')
     precio_por_noche = models.DecimalField(max_digits=10, decimal_places=2)
     disponibilidad = models.BooleanField(default=True)
+    descripcion_adicional = models.TextField(blank=True, null=True)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
+
+    @property
+    def _descripcion(self):
+        servicios_nombres = [servicio.nombre for servicio in self.servicios.all()]
+        servicios_str = ", ".join(servicios_nombres)
+
+        full_desc = self.descripcion_adicional if self.descripcion_adicional else ""
+
+        if servicios_str:
+            if full_desc:
+                full_desc += f". Servicios incluidos: {servicios_str}."
+            else:
+                full_desc = f"Servicios incluidos: {servicios_str}."
+        return full_desc
+    
     
     def __str__(self) -> str:
         return f"Habitación {self.piso_hotel.numero}{self.numero_dentro_piso:02d}" \

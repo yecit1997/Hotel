@@ -1,17 +1,16 @@
-# crud/serializer.py (o donde tengas tus serializadores para Habitacion y Servicio)
 from rest_framework import serializers
 from .models import Habitacion, Cama, Servicio, Piso
 
-# Asegúrate de tener un Serializer para Servicio si necesitas representarlo completamente
+# Asegúrate de que estos serializadores auxiliares existan para la lectura
 class ServicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Servicio
-        fields = ['id', 'nombre', 'detalle'] # O los campos que quieras mostrar
+        fields = ['id', 'nombre', 'detalle']
 
 class CamaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cama
-        fields = ['id', 'tipo']
+        fields = ['id', 'tipo', 'detalle']
 
 class PisoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,52 +19,72 @@ class PisoSerializer(serializers.ModelSerializer):
 
 
 class HabitacionSerializer(serializers.ModelSerializer):
-    # Para la escritura: permite una lista de UUIDs de servicios
+    # Campo para ESCRIBIR los servicios (lista de UUIDs)
     servicios = serializers.PrimaryKeyRelatedField(
         queryset=Servicio.objects.all(),
-        many=True,      # ¡Importante! Indica que es una relación de muchos
-        required=False  # Si una habitación puede crearse sin servicios iniciales
+        many=True,
+        required=False
     )
 
-    # Para la lectura: puedes usar un serializador anidado o StringRelatedField
-    # Opción A: Serializador anidado para mostrar detalles completos de los servicios
-    # servicios_detalles = ServicioSerializer(source='servicios', many=True, read_only=True)
-    
-    # Opción B (más simple): StringRelatedField para mostrar solo el nombre de los servicios
+    # Campo de SOLO LECTURA para mostrar los nombres de los servicios en la respuesta GET
     servicios_nombres = serializers.StringRelatedField(source='servicios', many=True, read_only=True)
 
-    # Serializador para cama y piso_hotel si quieres una representación más detallada en la salida
+    # Serializadores para mostrar los detalles de Cama y Piso en la respuesta GET
     cama_detalle = CamaSerializer(source='cama', read_only=True)
     piso_hotel_detalle = PisoSerializer(source='piso_hotel', read_only=True)
     
-    # Si quieres enviar el UUID de cama y piso_hotel para escritura
+    # Campos para la escritura de Cama y Piso (requeridos si no son null=True, blank=True en el modelo)
     cama = serializers.PrimaryKeyRelatedField(queryset=Cama.objects.all(), required=False, allow_null=True)
-    piso_hotel = serializers.PrimaryKeyRelatedField(queryset=Piso.objects.all()) # Generalmente obligatorio
+    piso_hotel = serializers.PrimaryKeyRelatedField(queryset=Piso.objects.all())
+    
+    descripcion = serializers.CharField(source='descripcion_adicional', required=False, allow_blank=True) # Para escritura
+    # Luego, un campo read_only para la descripción completa:
+    full_descripcion = serializers.CharField(source='descripcion', read_only=True) # Usa el @property del modelo
 
     class Meta:
         model = Habitacion
         fields = [
             'id', 
             'tamano', 
-            'piso_hotel',            # Para escritura (UUID del Piso)
-            'piso_hotel_detalle',    # Para lectura (detalles del Piso)
+            'piso_hotel',           
+            'piso_hotel_detalle',   
             'numero_dentro_piso', 
-            'servicios',             # Para escritura (lista de UUIDs de servicios)
-            'servicios_nombres',     # Para lectura (lista de nombres de servicios)
-            'cama',                  # Para escritura (UUID de la Cama)
-            'cama_detalle',          # Para lectura (detalles de la Cama)
+            'servicios',            
+            'servicios_nombres',    
+            'cama',                 
+            'cama_detalle',         
             'precio_por_noche', 
             'disponibilidad', 
-            'descripcion',
+            'descripcion',          # Incluimos 'descripcion' aquí para que el usuario pueda enviarla
+            'full_descripcion',
             'fecha_creacion',
             'fecha_modificacion',
         ]
         read_only_fields = ['fecha_creacion', 'fecha_modificacion']
         
         extra_kwargs = {
-            # Puedes añadir extra_kwargs para hacer algunos campos no requeridos en POST/PATCH
-            'tamano': {'required': False},
-            'precio_por_noche': {'required': False},
-            'descripcion': {'required': False},
-            # ... otros campos que no sean obligatorios
+            # 'tamano': {'required': T},
+            # 'precio_por_noche': {'required': False},
+            'descripcion': {'required': False}, # Asegúrate que sea opcional para que no lo pida siempre
         }
+
+     # No necesitas modificar create/update para la descripción, solo para los servicios
+    def create(self, validated_data):
+        servicios_data = validated_data.pop('servicios', [])
+        habitacion = Habitacion.objects.create(**validated_data)
+        habitacion.servicios.set(servicios_data)
+        return habitacion
+
+    def update(self, instance, validated_data):
+        servicios_data = validated_data.pop('servicios', None)
+        # ... actualizar otros campos
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        if servicios_data is not None:
+            instance.servicios.set(servicios_data)
+        return instance
+    
+    
+    
+    
