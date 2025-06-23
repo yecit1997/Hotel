@@ -65,7 +65,6 @@ class Habitacion(models.Model):
     precio_por_noche = models.DecimalField(max_digits=10, decimal_places=2)
     disponibilidad = models.BooleanField(default=True)
     descripcion_adicional = models.TextField(blank=True, null=True)
-    descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_modificacion = models.DateTimeField(auto_now=True)
 

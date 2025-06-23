@@ -55,7 +55,7 @@ class HabitacionSerializer(serializers.ModelSerializer):
             'cama_detalle',         
             'precio_por_noche', 
             'disponibilidad', 
-            'descripcion',          # Incluimos 'descripcion' aquí para que el usuario pueda enviarla
+            'descripcion',
             'full_descripcion',
             'fecha_creacion',
             'fecha_modificacion',
