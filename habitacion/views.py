@@ -120,8 +120,6 @@ class PisoRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 Creamos las vistas para el CRUD de las habitaciones
 '''
 
-
-
 class HabitacionListCreateAPIView(generics.ListCreateAPIView):
     queryset = Habitacion.objects.all()
     serializer_class = HabitacionSerializer
