@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 
-from .serializers import RolSerializer, UsuarioSerializer
+from .serializers import RolSerializer, UsuarioSerializer, UsuarioTokenObtainPairSerializer
 from .models import Usuario, Rol
 
 
@@ -147,8 +148,34 @@ class UsuariosViewDetail(APIView):
         return Response({'OK': 'El usuario se elimino correctamente'}, status=status.HTTP_200_OK)
           
     
+'''
+Creamos el metodo de login
+'''
 
+class LoginAPIView(TokenObtainPairView):
+    
+    serializer_class = UsuarioTokenObtainPairSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            return Response({"detail": "Credenciales inválidas"}, status=status.HTTP_401_UNAUTHORIZED)
 
+        # Si es válido, obtener la respuesta estándar (tokens)
+        response_data = serializer.validated_data
 
+        # Obtener el objeto de usuario (simplejwt lo adjunta al serializador)
+        user = serializer.user
+        
+        # Serializar el objeto de usuario y añadirlo a la respuesta
+        user_serializer = UsuarioSerializer(user)
+        response_data['user'] = user_serializer.data
+
+        return Response(response_data, status=status.HTTP_200_OK)
+        
+        
 
 

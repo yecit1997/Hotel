@@ -44,12 +44,14 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 LOCAL_APPS = [
-    'usuario',
-    'habitacion',
-    'cliente',
+    'usuario.apps.UsuarioConfig',
+    'habitacion.apps.HabitacionConfig',
+    'cliente.apps.ClienteConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -169,3 +171,13 @@ AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL') # Modelo con el cual los usuarios
 CORS_ALLOWED_ORIGINS = [
     os.getenv('URL_CLIENT'),
 ]
+
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+}

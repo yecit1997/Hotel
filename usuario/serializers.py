@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from rest_framework import serializers
 from .models import Usuario, Rol
 
@@ -73,3 +75,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+
+
+# Serializador para la respuesta de login
+
+class UsuarioTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['email'] = user.email
+        token['password'] = user.password
+        
+        return token
+    
+    
+    

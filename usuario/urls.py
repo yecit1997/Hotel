@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import RolesView, RolViewDetail, UsuariosView, UsuariosViewDetail
+from .views import RolesView, RolViewDetail, UsuariosView, UsuariosViewDetail, LoginAPIView
 
 urlpatterns = [
     path('roles/', RolesView.as_view(), name='roles'),
@@ -8,5 +8,7 @@ urlpatterns = [
     
     path('usuarios/', UsuariosView.as_view(), name='usuarios'),
     path('usuario/<str:pk>/', UsuariosViewDetail.as_view(), name='usuario'),
+    
+    path('login/', LoginAPIView.as_view(), name='login'),
     
 ]
