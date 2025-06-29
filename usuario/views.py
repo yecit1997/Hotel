@@ -36,6 +36,12 @@ class RolesView(APIView):
 
 class RolViewDetail(APIView):
     
+    '''
+    Consultamos el ID del Rol, si este no existe lanzamos un 404.
+    
+    Esta misma funcion es la que usaremos en las otras funcionas, ya que en esta contamos con el 
+    ID del rol solicitado
+    '''
     def get_rol(self, pk):
         try:
             return Rol.objects.get(id=pk)
@@ -48,6 +54,7 @@ class RolViewDetail(APIView):
         serializer = RolSerializer(rol)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+    
     def put(self, request, pk):
         rol = self.get_rol(pk)
         serializer = RolSerializer(rol, data=request.data)
@@ -59,7 +66,7 @@ class RolViewDetail(APIView):
     
     def patch(self, request, pk):
         rol = self.get_rol(pk)
-        serializer = RolSerializer(rol, data=request.data, partial=True)
+        serializer = RolSerializer(rol, data=request.data, partial=True) # Agregamos partial=True para poder actualizar el modelo parcialmente
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
