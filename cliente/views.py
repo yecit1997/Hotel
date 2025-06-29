@@ -1,15 +1,15 @@
 from rest_framework.views import APIView
-from rest_framework import generics
+
 # from django.http import Http404
 
 from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework.exceptions import NotFound 
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
  
-from .models import Cliente, Reserva
-from .serializer import ClienteSerializer, ReservaSerializer
+from .models import Cliente
+from .serializer import ClienteSerializer
 
 
 
@@ -66,18 +66,6 @@ class ClienteViewDetail(APIView):
         cliente.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    
-# lista y creacion de reservas
-class ReservaListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Reserva.objects.all()
-    serializer_class = ReservaSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly] # Solo visualizar si no esta autenticado
-    
-# Editar, actualizar y eliminar reservas
-class ReservaRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Reserva.objects.all()
-    serializer_class = ReservaSerializer
-    permission_classes = [IsAuthenticated] # Vistas solo para usuarios autenticados
     
 
 
