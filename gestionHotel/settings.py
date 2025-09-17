@@ -1,7 +1,3 @@
-"""
-Django settings for gestionHotel project.
-"""
-
 from datetime import timedelta
 from pathlib import Path
 import os
@@ -162,8 +158,13 @@ AUTH_USER_MODEL = os.getenv('AUTH_USER_MODEL', 'usuario.Usuario') # Añadir un d
 
 
 # Configuracion para la conexion del Frontend
-CORS_ALLOWED_ORIGINS_STR = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_STR if origin.strip()]
+# CORS_ALLOWED_ORIGINS_STR = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+# CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_STR if origin.strip()]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  # Frontend en desarrollo
+]
+
 
 # O en desarrollo, si lo deseas (pero cuidado en producción):
 # CORS_ALLOW_ALL_ORIGINS = DEBUG # Solo en debug, permite todo
@@ -227,7 +228,7 @@ SIMPLE_JWT = {
 
     # ¡Importante! Aquí debes apuntar a tu serializador personalizado si lo tienes.
     # Por ejemplo, si está en tu app 'usuario' en 'serializers.py'
-    "TOKEN_OBTAIN_SERIALIZER": "usuario.serializers.MyTokenObtainPairSerializer", 
+    "TOKEN_OBTAIN_SERIALIZER": "usuario.serializers.UsuarioTokenObtainPairSerializer", 
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
